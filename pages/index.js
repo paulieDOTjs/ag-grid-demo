@@ -7,10 +7,11 @@ import { useCoreDataContext } from "../lib/context/CoreDataProvider";
 
 export default function Home() {
   const [grid, setGrid] = useState();
-  const { messenger } = useCoreDataContext();
+  const { messenger, setReady } = useCoreDataContext();
 
   useEffect(() => {
     if (messenger && grid) {
+      setReady(true);
       messenger.addEventListener("message", handleEvent);
     }
     return () => {
@@ -19,8 +20,10 @@ export default function Home() {
       }
     };
     function handleEvent(e) {
+      console.log("receiving data");
       grid.api.setRowData(e.data);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messenger, grid]);
 
   function onGridReady(gridIns) {
